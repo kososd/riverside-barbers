@@ -364,7 +364,7 @@ h3 {
 
 .install-tip.is-visible {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr;
 }
 
 .install-tip strong {
@@ -379,6 +379,13 @@ h3 {
   line-height: 1.35;
 }
 
+.install-tip-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.install-button,
 .install-tip-close {
   min-height: 40px;
   padding: 8px 12px;
@@ -389,6 +396,12 @@ h3 {
   font: inherit;
   font-weight: 800;
   cursor: pointer;
+}
+
+.install-tip-close {
+  color: var(--white);
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.35);
 }
 
 @media (min-width: 720px) {

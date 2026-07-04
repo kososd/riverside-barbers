@@ -70,7 +70,7 @@ The browser favicon and mobile home screen icon use these files:
 
 If you replace the logo later, keep the same filenames and square PNG sizes so the links in `index.html` and `manifest.json` continue to work.
 
-The site also shows a small mobile-only reminder telling customers how to add Riverside Barber's to their phone home screen. The text is near the bottom of `index.html` in the `install-tip` block.
+The site also shows a small mobile-only `Add app` button. On supported Android browsers it can open the browser install prompt. On iPhone, Safari does not allow websites to launch Add to Home Screen directly, so the button shows the short manual instruction instead.
 
 ## Deploy For Free With GitHub Pages
 
