@@ -4,6 +4,8 @@ const navToggle = document.querySelector(".nav-toggle");
 const siteNav = document.querySelector(".site-nav");
 const bookingLinks = document.querySelectorAll(".js-booking-link");
 const currentYear = document.querySelector("#current-year");
+const installTip = document.querySelector(".install-tip");
+const installTipClose = document.querySelector(".install-tip-close");
 
 if (currentYear) {
   currentYear.textContent = new Date().getFullYear();
@@ -35,3 +37,17 @@ bookingLinks.forEach((link) => {
     }
   });
 });
+
+if (installTip && installTipClose) {
+  const hasDismissedInstallTip = localStorage.getItem("dismissedInstallTip") === "true";
+  const isSmallScreen = window.matchMedia("(max-width: 719px)").matches;
+
+  if (!hasDismissedInstallTip && isSmallScreen) {
+    installTip.classList.add("is-visible");
+  }
+
+  installTipClose.addEventListener("click", () => {
+    installTip.classList.remove("is-visible");
+    localStorage.setItem("dismissedInstallTip", "true");
+  });
+}

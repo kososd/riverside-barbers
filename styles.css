@@ -81,8 +81,15 @@ a {
   background: var(--green);
   border: 2px solid var(--brass);
   border-radius: 50%;
+  overflow: hidden;
   font-size: 0.84rem;
   letter-spacing: 0;
+}
+
+.brand-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .nav-toggle {
@@ -337,6 +344,53 @@ h3 {
   margin: 0;
 }
 
+.install-tip {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  z-index: 30;
+  display: none;
+  gap: 14px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px;
+  color: var(--white);
+  background: var(--green-dark);
+  border: 1px solid rgba(201, 151, 74, 0.5);
+  border-radius: 8px;
+  box-shadow: 0 18px 50px rgba(18, 53, 41, 0.28);
+}
+
+.install-tip.is-visible {
+  display: grid;
+  grid-template-columns: 1fr auto;
+}
+
+.install-tip strong {
+  display: block;
+  margin-bottom: 2px;
+}
+
+.install-tip p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.88rem;
+  line-height: 1.35;
+}
+
+.install-tip-close {
+  min-height: 40px;
+  padding: 8px 12px;
+  color: var(--green-dark);
+  background: var(--brass);
+  border: 0;
+  border-radius: 6px;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
 @media (min-width: 720px) {
   .site-header {
     padding-inline: 40px;
@@ -381,6 +435,10 @@ h3 {
 
   h2 {
     font-size: 2.8rem;
+  }
+
+  .install-tip.is-visible {
+    display: none;
   }
 }
 

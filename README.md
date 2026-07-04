@@ -58,6 +58,20 @@ For WhatsApp, use the international phone number without spaces or the plus symb
 https://wa.me/353832042922
 ```
 
+## Change The Site Icon
+
+The browser favicon and mobile home screen icon use these files:
+
+- `assets/favicon-32.png`
+- `assets/apple-touch-icon.png`
+- `assets/icon-192.png`
+- `assets/icon-512.png`
+- `manifest.json`
+
+If you replace the logo later, keep the same filenames and square PNG sizes so the links in `index.html` and `manifest.json` continue to work.
+
+The site also shows a small mobile-only reminder telling customers how to add Riverside Barber's to their phone home screen. The text is near the bottom of `index.html` in the `install-tip` block.
+
 ## Deploy For Free With GitHub Pages
 
 1. Create a new GitHub repository.

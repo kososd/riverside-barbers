@@ -8,12 +8,19 @@
       content="Riverside Barber's in Limerick. View services, prices, opening hours, and book a barber appointment online."
     />
     <title>Riverside Barber's | Barber Appointments in Limerick</title>
+    <meta name="theme-color" content="#123529" />
+    <meta name="apple-mobile-web-app-title" content="Riverside Barber's" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <header class="site-header">
       <a class="brand" href="#home" aria-label="Riverside Barber's home">
-        <span class="brand-mark">RB</span>
+        <span class="brand-mark">
+          <img src="assets/icon-192.png" alt="" />
+        </span>
         <span>Riverside Barber's</span>
       </a>
       <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
@@ -138,6 +145,14 @@
     <footer class="site-footer">
       <p>&copy; <span id="current-year"></span> Riverside Barber's. Static site MVP for GitHub Pages.</p>
     </footer>
+
+    <aside class="install-tip" aria-label="Add Riverside Barber's to your phone">
+      <div>
+        <strong>Add Riverside Barber's to your phone</strong>
+        <p>iPhone: Share > Add to Home Screen. Android: browser menu > Add to Home screen.</p>
+      </div>
+      <button class="install-tip-close" type="button" aria-label="Dismiss home screen tip">Dismiss</button>
+    </aside>
 
     <script src="script.js"></script>
   </body>
