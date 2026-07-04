@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Riverside Barber's in Limerick. View services, prices, opening hours, and book a barber appointment online."
+    />
+    <title>Riverside Barber's | Barber Appointments in Limerick</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#home" aria-label="Riverside Barber's home">
+        <span class="brand-mark">RB</span>
+        <span>Riverside Barber's</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span class="sr-only">Open navigation</span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <nav id="site-nav" class="site-nav" aria-label="Main navigation">
+        <a href="#services">Services</a>
+        <a href="#booking">Book</a>
+        <a href="#hours">Hours</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main>
+      <section id="home" class="hero">
+        <img src="assets/barber-hero.png" alt="A clean modern barber shop interior" />
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <p class="eyebrow">Local barber in Limerick</p>
+          <h1>Sharp cuts, easy bookings.</h1>
+          <p>
+            Riverside Barber's keeps appointments simple. Choose a service, pick a
+            time in Google Calendar, and arrive ready for a fresh cut.
+          </p>
+          <div class="hero-actions">
+            <a class="button button-primary js-booking-link" href="GOOGLE_BOOKING_URL">Book Now</a>
+            <a class="button button-secondary" href="#services">View Prices</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="services" class="section">
+        <div class="section-heading">
+          <p class="eyebrow">Services and prices</p>
+          <h2>Simple barber services</h2>
+        </div>
+        <div class="service-grid">
+          <article class="service-card">
+            <h3>Gents haircut</h3>
+            <p>Classic scissor or clipper cut, finished and styled.</p>
+            <strong>&euro;25</strong>
+          </article>
+          <article class="service-card">
+            <h3>Skin fade</h3>
+            <p>Clean fade with detail work and a sharp finish.</p>
+            <strong>&euro;30</strong>
+          </article>
+          <article class="service-card">
+            <h3>Beard trim</h3>
+            <p>Shape, tidy, and line-up for a neat beard finish.</p>
+            <strong>&euro;15</strong>
+          </article>
+          <article class="service-card">
+            <h3>Haircut and beard</h3>
+            <p>A complete cut and beard tidy in one appointment.</p>
+            <strong>&euro;35</strong>
+          </article>
+        </div>
+      </section>
+
+      <section id="booking" class="booking-band">
+        <div>
+          <p class="eyebrow">Book appointment</p>
+          <h2>Ready for your next trim?</h2>
+          <p>
+            The booking button sends customers to your Google Calendar Appointment
+            Schedule. No backend, no database, and no paid booking software needed.
+          </p>
+        </div>
+        <a class="button button-primary js-booking-link" href="GOOGLE_BOOKING_URL">Book Now</a>
+      </section>
+
+      <section id="hours" class="section split-section">
+        <div class="section-heading">
+          <p class="eyebrow">Opening hours</p>
+          <h2>Visit during the week</h2>
+          <p>Update these sample hours in the HTML whenever your schedule changes.</p>
+        </div>
+        <div class="hours-list" aria-label="Opening hours">
+          <div><span>Monday</span><strong>Closed</strong></div>
+          <div><span>Tuesday</span><strong>09:00 - 18:00</strong></div>
+          <div><span>Wednesday</span><strong>09:00 - 18:00</strong></div>
+          <div><span>Thursday</span><strong>09:00 - 20:00</strong></div>
+          <div><span>Friday</span><strong>09:00 - 18:00</strong></div>
+          <div><span>Saturday</span><strong>09:00 - 17:00</strong></div>
+          <div><span>Sunday</span><strong>Closed</strong></div>
+        </div>
+      </section>
+
+      <section id="contact" class="section contact-section">
+        <div class="section-heading">
+          <p class="eyebrow">Location and contact</p>
+          <h2>Main Street, Limerick</h2>
+          <p>Riverside Barber's, Main Street, Limerick, Ireland</p>
+        </div>
+        <div class="contact-actions">
+          <a class="contact-button" href="tel:+353870000000">Phone</a>
+          <a
+            class="contact-button"
+            href="https://wa.me/353870000000"
+            target="_blank"
+            rel="noopener"
+          >
+            WhatsApp
+          </a>
+          <a class="contact-button" href="mailto:bookings@example.com">Email</a>
+          <a
+            class="contact-button"
+            href="https://www.google.com/maps/search/?api=1&query=Main%20Street%2C%20Limerick%2C%20Ireland"
+            target="_blank"
+            rel="noopener"
+          >
+            Google Maps
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>&copy; <span id="current-year"></span> Riverside Barber's. Static site MVP for GitHub Pages.</p>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
