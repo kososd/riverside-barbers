@@ -48,14 +48,14 @@ All buttons with the `js-booking-link` class will then open that booking page.
 Open `index.html` and update:
 
 - Business name: `Riverside Barber's`
-- Phone: `+353 87 000 0000`
+- Phone: `+353 83 204 2922`
 - Email: `bookings@example.com`
 - Address: `Main Street, Limerick, Ireland`
 
 For WhatsApp, use the international phone number without spaces or the plus symbol:
 
 ```html
-https://wa.me/353870000000
+https://wa.me/353832042922
 ```
 
 ## Deploy For Free With GitHub Pages
