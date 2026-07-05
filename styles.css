@@ -165,7 +165,7 @@ a {
 }
 
 .hero-content {
-  width: min(760px, 100%);
+  width: 100%;
   padding: 72px 20px 54px;
   color: var(--white);
 }
