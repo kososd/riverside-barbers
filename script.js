@@ -10,6 +10,25 @@ const installTipClose = document.querySelector(".install-tip-close");
 const installTipMessage = document.querySelector(".install-tip-message");
 
 let deferredInstallPrompt;
+const userAgent = window.navigator.userAgent || "";
+const isAndroid = /Android/i.test(userAgent);
+const isIOS = /iPhone|iPad|iPod/i.test(userAgent);
+
+function readStoredFlag(key) {
+  try {
+    return localStorage.getItem(key) === "true";
+  } catch {
+    return false;
+  }
+}
+
+function writeStoredFlag(key) {
+  try {
+    localStorage.setItem(key, "true");
+  } catch {
+    // Storage can be unavailable in some private browsing modes.
+  }
+}
 
 if (currentYear) {
   currentYear.textContent = new Date().getFullYear();
@@ -46,7 +65,8 @@ window.addEventListener("beforeinstallprompt", (event) => {
   event.preventDefault();
   deferredInstallPrompt = event;
 
-  if (installTip && shouldShowInstallTip()) {
+  if (installTip && shouldShowInstallTip(true)) {
+    setInstallMessage();
     installTip.classList.add("is-visible");
   }
 });
@@ -55,15 +75,51 @@ function isRunningStandalone() {
   return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
 }
 
-function shouldShowInstallTip() {
-  const hasDismissedInstallTip = localStorage.getItem("dismissedInstallTip") === "true";
+function shouldShowInstallTip(hasNativePrompt = Boolean(deferredInstallPrompt)) {
+  const hasDismissedInstallTip = readStoredFlag("dismissedInstallTip");
   const isSmallScreen = window.matchMedia("(max-width: 719px)").matches;
 
-  return !hasDismissedInstallTip && isSmallScreen && !isRunningStandalone();
+  if (hasDismissedInstallTip || !isSmallScreen || isRunningStandalone()) {
+    return false;
+  }
+
+  return isIOS || isAndroid || hasNativePrompt;
+}
+
+function setInstallMessage() {
+  if (!installTipMessage || !installButton) {
+    return;
+  }
+
+  if (deferredInstallPrompt) {
+    installTipMessage.textContent = "Install the site on this phone for faster booking.";
+    installButton.textContent = "Add app";
+    return;
+  }
+
+  if (isAndroid) {
+    installTipMessage.textContent = "Tap Add app for the Android home screen steps.";
+    installButton.textContent = "Show steps";
+    return;
+  }
+
+  if (isIOS) {
+    installTipMessage.textContent = "Tap Add app for the iPhone home screen steps.";
+    installButton.textContent = "Show steps";
+  }
+}
+
+function hideInstallTip() {
+  if (installTip) {
+    installTip.classList.remove("is-visible");
+  }
+
+  writeStoredFlag("dismissedInstallTip");
 }
 
 if (installTip && installButton && installTipClose) {
   if (shouldShowInstallTip()) {
+    setInstallMessage();
     installTip.classList.add("is-visible");
   }
 
@@ -72,19 +128,23 @@ if (installTip && installButton && installTipClose) {
       deferredInstallPrompt.prompt();
       await deferredInstallPrompt.userChoice;
       deferredInstallPrompt = undefined;
-      installTip.classList.remove("is-visible");
-      localStorage.setItem("dismissedInstallTip", "true");
+      hideInstallTip();
       return;
     }
 
-    if (installTipMessage) {
-      installTipMessage.textContent =
-        "iPhone: tap Share, then Add to Home Screen. Android: use the browser menu, then Add to Home screen.";
+    if (installTipMessage && isAndroid) {
+      installTipMessage.textContent = "Android: open the browser menu, then tap Add to Home screen.";
+      return;
+    }
+
+    if (installTipMessage && isIOS) {
+      installTipMessage.textContent = "iPhone: tap Share, then Add to Home Screen.";
     }
   });
 
-  installTipClose.addEventListener("click", () => {
-    installTip.classList.remove("is-visible");
-    localStorage.setItem("dismissedInstallTip", "true");
+  installTip.addEventListener("click", (event) => {
+    if (event.target.closest(".install-tip-close")) {
+      hideInstallTip();
+    }
   });
 }
