@@ -6,26 +6,45 @@ There is no backend, database, payment system, Firebase, Supabase, Stripe, or pa
 
 ## Files
 
-- `index.html` - page content, services, prices, opening hours, and contact details.
+- `index.html` - page content, fallback services, opening hours, and contact details.
 - `styles.css` - responsive design and visual styling.
-- `script.js` - mobile menu and the Google booking link placeholder.
+- `script.js` - mobile menu, Google booking link, and Google Sheet services loader.
 - `assets/barber-hero.png` - hero image used on the homepage.
 
 ## Edit Services And Prices
 
-Open `index.html` and find the `service-card` blocks in the `Services and prices` section.
+Services and prices can be loaded from a published Google Sheet. Create a sheet with these column names in the first row:
 
-Example:
-
-```html
-<article class="service-card">
-  <h3>Gents haircut</h3>
-  <p>Classic scissor or clipper cut, finished and styled.</p>
-  <strong>&euro;25</strong>
-</article>
+```text
+name,description,price,active,sort_order
 ```
 
-Change the service name inside `<h3>`, the description inside `<p>`, and the price inside `<strong>`.
+Example rows:
+
+```csv
+name,description,price,active,sort_order
+Gents haircut,"Classic scissor or clipper cut, finished and styled.",€20,yes,1
+Skin fade,"Clean fade with detail work and a sharp finish.",€30,yes,2
+Beard trim,"Shape, tidy, and line-up for a neat beard finish.",€15,no,3
+```
+
+In Google Sheets, choose **File**, **Share**, **Publish to web**. Select the services sheet, choose **Comma-separated values (.csv)**, then publish and copy the CSV link.
+
+Open `script.js` and replace this line:
+
+```js
+const SERVICES_CSV_URL = "GOOGLE_SHEET_CSV_URL";
+```
+
+with your published CSV link:
+
+```js
+const SERVICES_CSV_URL = "https://docs.google.com/spreadsheets/d/e/your-published-sheet/pub?output=csv";
+```
+
+Rows are shown when `active` is `yes`, `true`, `1`, `y`, or `active`. Leave `active` blank to show the row. Set it to `no` to hide a service. `sort_order` controls the display order.
+
+If the Google Sheet cannot be loaded, the site keeps showing the fallback service cards already in `index.html`.
 
 ## Replace The Google Booking Link
 

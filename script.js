@@ -1,9 +1,12 @@
 const GOOGLE_BOOKING_URL = "https://calendar.app.google/NvG3mrkW7zHY8rYk7";
+const SERVICES_CSV_URL =
+  "https://docs.google.com/spreadsheets/d/1GS1qOwTKx7audJ76rvXwSnEdOOIebgv6RDijTSvTgLU/export?format=csv&gid=0";
 
 const navToggle = document.querySelector(".nav-toggle");
 const siteNav = document.querySelector(".site-nav");
 const bookingLinks = document.querySelectorAll(".js-booking-link");
 const currentYear = document.querySelector("#current-year");
+const servicesGrid = document.querySelector("#services-grid");
 const installTip = document.querySelector(".install-tip");
 const installButton = document.querySelector(".install-button");
 const installTipClose = document.querySelector(".install-tip-close");
@@ -33,6 +36,151 @@ function writeStoredFlag(key) {
 if (currentYear) {
   currentYear.textContent = new Date().getFullYear();
 }
+
+function parseCsv(csvText) {
+  const rows = [];
+  let row = [];
+  let value = "";
+  let isInsideQuotes = false;
+
+  for (let index = 0; index < csvText.length; index += 1) {
+    const character = csvText[index];
+    const nextCharacter = csvText[index + 1];
+
+    if (character === '"' && isInsideQuotes && nextCharacter === '"') {
+      value += '"';
+      index += 1;
+      continue;
+    }
+
+    if (character === '"') {
+      isInsideQuotes = !isInsideQuotes;
+      continue;
+    }
+
+    if (character === "," && !isInsideQuotes) {
+      row.push(value.trim());
+      value = "";
+      continue;
+    }
+
+    if ((character === "\n" || character === "\r") && !isInsideQuotes) {
+      if (character === "\r" && nextCharacter === "\n") {
+        index += 1;
+      }
+
+      row.push(value.trim());
+      value = "";
+
+      if (row.some(Boolean)) {
+        rows.push(row);
+      }
+
+      row = [];
+      continue;
+    }
+
+    value += character;
+  }
+
+  row.push(value.trim());
+
+  if (row.some(Boolean)) {
+    rows.push(row);
+  }
+
+  return rows;
+}
+
+function normalizeHeader(header) {
+  return header.trim().replace(/^\uFEFF/, "").toLowerCase().replace(/\s+/g, "_");
+}
+
+function isActiveService(value) {
+  if (!value) {
+    return true;
+  }
+
+  return ["1", "true", "yes", "y", "active"].includes(value.trim().toLowerCase());
+}
+
+function parseServices(csvText) {
+  const rows = parseCsv(csvText);
+
+  if (rows.length < 2) {
+    return [];
+  }
+
+  const headers = rows[0].map(normalizeHeader);
+
+  return rows
+    .slice(1)
+    .map((row, rowIndex) => {
+      const service = {};
+
+      headers.forEach((header, index) => {
+        service[header] = row[index] || "";
+      });
+
+      const name = service.name || "";
+      const description = service.description || "";
+      const price = service.price || "";
+      const active = service.active || "";
+      const sortOrder = service.sort_order || "";
+
+      return {
+        name: name.trim(),
+        description: description.trim(),
+        price: price.trim(),
+        active: isActiveService(active),
+        sortOrder: Number.parseFloat(sortOrder) || rowIndex + 1,
+      };
+    })
+    .filter((service) => service.active && service.name && service.price)
+    .sort((firstService, secondService) => firstService.sortOrder - secondService.sortOrder);
+}
+
+function createServiceCard(service) {
+  const card = document.createElement("article");
+  const title = document.createElement("h3");
+  const description = document.createElement("p");
+  const price = document.createElement("strong");
+
+  card.className = "service-card";
+  title.textContent = service.name;
+  description.textContent = service.description;
+  price.textContent = service.price;
+
+  card.append(title, description, price);
+
+  return card;
+}
+
+async function loadServicesFromSheet() {
+  if (!servicesGrid || SERVICES_CSV_URL === "GOOGLE_SHEET_CSV_URL") {
+    return;
+  }
+
+  try {
+    const response = await fetch(SERVICES_CSV_URL, { cache: "no-store" });
+
+    if (!response.ok) {
+      throw new Error(`Services sheet returned ${response.status}`);
+    }
+
+    const services = parseServices(await response.text());
+
+    if (!services.length) {
+      throw new Error("Services sheet did not include any active services");
+    }
+
+    servicesGrid.replaceChildren(...services.map(createServiceCard));
+  } catch (error) {
+    console.warn("Using fallback services because the Google Sheet could not be loaded.", error);
+  }
+}
+
+loadServicesFromSheet();
 
 if (navToggle && siteNav) {
   navToggle.addEventListener("click", () => {
