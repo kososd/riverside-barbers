@@ -1,6 +1,6 @@
 # Riverside Barber's Booking Website
 
-A simple static MVP for a local barber appointment booking service. It is built with only HTML, CSS, and JavaScript, so it can be hosted for free on GitHub Pages.
+A simple static MVP for a local barber appointment booking service.. It is built with only HTML, CSS, and JavaScript, so it can be hosted for free on GitHub Pages.
 
 There is no backend, database, payment system, Firebase, Supabase, Stripe, or paid API. Booking buttons send customers to a Google Calendar Appointment Schedule link.
 
