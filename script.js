@@ -1,6 +1,6 @@
 const GOOGLE_BOOKING_URL = "https://calendar.app.google/NvG3mrkW7zHY8rYk7";
 const SERVICES_CSV_URL =
-  "https://docs.google.com/spreadsheets/d/1GS1qOwTKx7audJ76rvXwSnEdOOIebgv6RDijTSvTgLU/export?format=csv&gid=0";
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vRwgUfsdrEiZh0EFepgGLQHVsfWXazqckz9cy5EJV-gG1eIqFnasCQVxL2R-GHzgGD27v3cXGx6Uw6r/pub?gid=0&single=true&output=csv";
 
 const navToggle = document.querySelector(".nav-toggle");
 const siteNav = document.querySelector(".site-nav");
