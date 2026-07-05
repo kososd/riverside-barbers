@@ -1,7 +1,7 @@
 {
-  "name": "Riverside Barber's",
+  "name": "Riverside Barbers",
   "short_name": "Riverside",
-  "description": "Book barber appointments with Riverside Barber's in Limerick.",
+  "description": "Book barber appointments with Riverside Barbers in Limerick.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

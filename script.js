@@ -5,6 +5,8 @@ const SERVICES_CSV_URL =
 const navToggle = document.querySelector(".nav-toggle");
 const siteNav = document.querySelector(".site-nav");
 const bookingLinks = document.querySelectorAll(".js-booking-link");
+const recommendWhatsAppLink = document.querySelector(".js-recommend-whatsapp");
+const recommendEmailLink = document.querySelector(".js-recommend-email");
 const currentYear = document.querySelector("#current-year");
 const servicesGrid = document.querySelector("#services-grid");
 const installTip = document.querySelector(".install-tip");
@@ -36,6 +38,25 @@ function writeStoredFlag(key) {
 if (currentYear) {
   currentYear.textContent = new Date().getFullYear();
 }
+
+function setRecommendationLinks() {
+  const pageUrl = `${window.location.origin}${window.location.pathname}`;
+  const shareText = `I thought you might like Riverside Barbers in Limerick: ${pageUrl}`;
+  const emailSubject = "Riverside Barbers recommendation";
+  const emailBody = `Hi,\n\nI thought you might like Riverside Barbers in Limerick. You can view their services, hours, and booking page here:\n\n${pageUrl}`;
+
+  if (recommendWhatsAppLink) {
+    recommendWhatsAppLink.href = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+    recommendWhatsAppLink.target = "_blank";
+    recommendWhatsAppLink.rel = "noopener";
+  }
+
+  if (recommendEmailLink) {
+    recommendEmailLink.href = `mailto:?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+  }
+}
+
+setRecommendationLinks();
 
 function parseCsv(csvText) {
   const rows = [];
