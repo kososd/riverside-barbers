@@ -1,4 +1,4 @@
-const GOOGLE_BOOKING_URL = "https://calendar.app.google/1MwnvHGy3efWZzt79";
+const GOOGLE_BOOKING_URL = "https://calendar.app.google/NvG3mrkW7zHY8rYk7";
 
 const navToggle = document.querySelector(".nav-toggle");
 const siteNav = document.querySelector(".site-nav");
