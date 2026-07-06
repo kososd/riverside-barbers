@@ -166,7 +166,6 @@ function applySettings(settings) {
   });
 
   if (phoneLink) {
-    phoneLink.textContent = settings.contact_phone_display;
     phoneLink.href = `tel:${settings.contact_phone_tel}`;
   }
 

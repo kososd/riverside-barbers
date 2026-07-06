@@ -88,7 +88,7 @@ Example rows:
 ```csv
 key,value,notes
 booking_url,https://calendar.app.google/NvG3mrkW7zHY8rYk7,Google Calendar booking link
-contact_phone_display,+353 83 204 2922,Text shown to customers
+contact_phone_display,+353 83 204 2922,Optional phone display value
 contact_phone_tel,+353832042922,Phone link value
 contact_whatsapp_number,353832042922,"WhatsApp number, no plus/spaces"
 contact_email,bookings@example.com,Email link value
@@ -101,7 +101,6 @@ Open `script.js` and set `SETTINGS_CSV_URL` to the published CSV link for the se
 The site uses these keys:
 
 - `booking_url` - Google Calendar Appointment Schedule URL used by all Book Now buttons.
-- `contact_phone_display` - phone number text shown to customers.
 - `contact_phone_tel` - phone link value used for `tel:`.
 - `contact_whatsapp_number` - WhatsApp number used for `https://wa.me/`.
 - `contact_email` - email address used for `mailto:`.
