@@ -2,6 +2,8 @@ const SERVICES_CSV_URL =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vRwgUfsdrEiZh0EFepgGLQHVsfWXazqckz9cy5EJV-gG1eIqFnasCQVxL2R-GHzgGD27v3cXGx6Uw6r/pub?gid=0&single=true&output=csv";
 const SETTINGS_CSV_URL =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vRwgUfsdrEiZh0EFepgGLQHVsfWXazqckz9cy5EJV-gG1eIqFnasCQVxL2R-GHzgGD27v3cXGx6Uw6r/pub?gid=1894676105&single=true&output=csv";
+const HOURS_CSV_URL =
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vRwgUfsdrEiZh0EFepgGLQHVsfWXazqckz9cy5EJV-gG1eIqFnasCQVxL2R-GHzgGD27v3cXGx6Uw6r/pub?gid=258915571&single=true&output=csv";
 const FALLBACK_SETTINGS = {
   booking_url: "https://calendar.app.google/NvG3mrkW7zHY8rYk7",
   contact_phone_display: "+353 83 204 2922",
@@ -20,6 +22,7 @@ const recommendWhatsAppLink = document.querySelector(".js-recommend-whatsapp");
 const recommendEmailLink = document.querySelector(".js-recommend-email");
 const currentYear = document.querySelector("#current-year");
 const servicesGrid = document.querySelector("#services-grid");
+const hoursList = document.querySelector(".hours-list");
 const installTip = document.querySelector(".install-tip");
 const installButton = document.querySelector(".install-button");
 const installTipClose = document.querySelector(".install-tip-close");
@@ -197,7 +200,7 @@ async function loadSettingsFromSheet() {
   }
 }
 
-function isActiveService(value) {
+function isActiveRow(value) {
   if (!value) {
     return true;
   }
@@ -233,7 +236,7 @@ function parseServices(csvText) {
         name: name.trim(),
         description: description.trim(),
         price: price.trim(),
-        active: isActiveService(active),
+        active: isActiveRow(active),
         sortOrder: Number.parseFloat(sortOrder) || rowIndex + 1,
       };
     })
@@ -255,6 +258,79 @@ function createServiceCard(service) {
   card.append(title, description, price);
 
   return card;
+}
+
+function parseHours(csvText) {
+  const rows = parseCsv(csvText);
+
+  if (rows.length < 2) {
+    return [];
+  }
+
+  const headers = rows[0].map(normalizeHeader);
+
+  return rows
+    .slice(1)
+    .map((row, rowIndex) => {
+      const hours = {};
+
+      headers.forEach((header, index) => {
+        hours[header] = row[index] || "";
+      });
+
+      const day = hours.day || "";
+      const openTime = hours.open_time || "";
+      const closeTime = hours.close_time || "";
+      const displayText = hours.display_text || "";
+      const active = hours.active || "";
+      const sortOrder = hours.sort_order || "";
+
+      return {
+        day: day.trim(),
+        displayText: displayText.trim() || `${openTime.trim()} - ${closeTime.trim()}`,
+        active: isActiveRow(active),
+        sortOrder: Number.parseFloat(sortOrder) || rowIndex + 1,
+      };
+    })
+    .filter((hours) => hours.active && hours.day && hours.displayText.trim() !== "-")
+    .sort((firstHours, secondHours) => firstHours.sortOrder - secondHours.sortOrder);
+}
+
+function createHoursRow(hours) {
+  const row = document.createElement("div");
+  const day = document.createElement("span");
+  const displayText = document.createElement("strong");
+
+  day.textContent = hours.day;
+  displayText.textContent = hours.displayText;
+
+  row.append(day, displayText);
+
+  return row;
+}
+
+async function loadHoursFromSheet() {
+  if (!hoursList || HOURS_CSV_URL === "GOOGLE_HOURS_CSV_URL") {
+    return;
+  }
+
+  try {
+    const response = await fetch(HOURS_CSV_URL, { cache: "no-store" });
+
+    if (!response.ok) {
+      throw new Error(`Hours sheet returned ${response.status}`);
+    }
+
+    const hours = parseHours(await response.text());
+
+    if (!hours.length) {
+      throw new Error("Hours sheet did not include any active rows");
+    }
+
+    hoursList.replaceChildren(...hours.map(createHoursRow));
+  } catch (error) {
+    console.warn("Using fallback hours because the Google Sheet could not be loaded.", error);
+  }
 }
 
 async function loadServicesFromSheet() {
@@ -283,6 +359,7 @@ async function loadServicesFromSheet() {
 
 applySettings(FALLBACK_SETTINGS);
 loadSettingsFromSheet();
+loadHoursFromSheet();
 loadServicesFromSheet();
 
 if (navToggle && siteNav) {

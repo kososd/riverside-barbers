@@ -8,7 +8,7 @@ There is no backend, database, payment system, Firebase, Supabase, Stripe, or pa
 
 - `index.html` - page content, fallback services, opening hours, and contact details.
 - `styles.css` - responsive design and visual styling.
-- `script.js` - mobile menu, Google Sheet services loader, and Google Sheet site settings loader.
+- `script.js` - mobile menu, Google Sheet loaders for services, site settings, and business hours.
 - `assets/barber-hero.png` - hero image used on the homepage.
 
 ## Edit Services And Prices
@@ -45,6 +45,35 @@ const SERVICES_CSV_URL = "https://docs.google.com/spreadsheets/d/e/your-publishe
 Rows are shown when `active` is `yes`, `true`, `1`, `y`, or `active`. Leave `active` blank to show the row. Set it to `no` to hide a service. `sort_order` controls the display order.
 
 If the Google Sheet cannot be loaded, the site keeps showing the fallback service cards already in `index.html`.
+
+## Edit Business Hours
+
+Business hours can be loaded from a published Google Sheet. Create a sheet named `business_hours` with these column names in the first row:
+
+```text
+day,open_time,close_time,display_text,active,sort_order
+```
+
+Example rows:
+
+```csv
+day,open_time,close_time,display_text,active,sort_order
+Monday,09:30,19:00,09:30 - 19:00,yes,1
+Tuesday,09:30,19:00,09:30 - 19:00,yes,2
+Wednesday,09:30,19:00,09:30 - 19:00,yes,3
+Thursday,09:30,19:00,09:30 - 19:00,yes,4
+Friday,09:30,19:00,09:30 - 19:00,yes,5
+Saturday,09:00,19:00,09:00 - 19:00,yes,6
+Sunday,10:00,17:00,10:00 - 17:00,yes,7
+```
+
+In Google Sheets, choose **File**, **Share**, **Publish to web**. Select the `business_hours` sheet, choose **Comma-separated values (.csv)**, then publish and copy the CSV link.
+
+Open `script.js` and set `HOURS_CSV_URL` to the published CSV link for the business hours sheet.
+
+The site shows `display_text` when it is present. If `display_text` is blank, it builds the text from `open_time` and `close_time`. Rows are shown when `active` is `yes`, `true`, `1`, `y`, or `active`. Leave `active` blank to show the row. Set it to `no` to hide a day. `sort_order` controls the display order.
+
+If the business hours sheet cannot be loaded, the site keeps showing the fallback hours already in `index.html`.
 
 ## Edit Site Settings
 
