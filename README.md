@@ -8,7 +8,7 @@ There is no backend, database, payment system, Firebase, Supabase, Stripe, or pa
 
 - `index.html` - page content, fallback services, opening hours, and contact details.
 - `styles.css` - responsive design and visual styling.
-- `script.js` - mobile menu, Google booking link, and Google Sheet services loader.
+- `script.js` - mobile menu, Google Sheet services loader, and Google Sheet site settings loader.
 - `assets/barber-hero.png` - hero image used on the homepage.
 
 ## Edit Services And Prices
@@ -46,36 +46,44 @@ Rows are shown when `active` is `yes`, `true`, `1`, `y`, or `active`. Leave `act
 
 If the Google Sheet cannot be loaded, the site keeps showing the fallback service cards already in `index.html`.
 
-## Replace The Google Booking Link
+## Edit Site Settings
 
-Open `script.js` and replace this line:
+The booking link and contact details can be loaded from a second published sheet in the same spreadsheet. Create a sheet named `site_settings` with these column names in the first row:
 
-```js
-const GOOGLE_BOOKING_URL = "GOOGLE_BOOKING_URL";
+```text
+key,value,notes
 ```
 
-with your real Google Calendar Appointment Schedule URL:
+Example rows:
 
-```js
-const GOOGLE_BOOKING_URL = "https://calendar.google.com/calendar/appointments/your-link-here";
+```csv
+key,value,notes
+booking_url,https://calendar.app.google/NvG3mrkW7zHY8rYk7,Google Calendar booking link
+contact_phone_display,+353 83 204 2922,Text shown to customers
+contact_phone_tel,+353832042922,Phone link value
+contact_whatsapp_number,353832042922,"WhatsApp number, no plus/spaces"
+contact_email,bookings@example.com,Email link value
 ```
 
-All buttons with the `js-booking-link` class will then open that booking page.
+In Google Sheets, choose **File**, **Share**, **Publish to web**. Select the `site_settings` sheet, choose **Comma-separated values (.csv)**, then publish and copy the CSV link.
 
-## Edit Business Details
+Open `script.js` and set `SETTINGS_CSV_URL` to the published CSV link for the settings sheet.
 
-Open `index.html` and update:
+The site uses these keys:
 
-- Business name: `Riverside Barber's`
-- Phone: `+353 83 204 2922`
-- Email: `bookings@example.com`
-- Address: `Main Street, Limerick, Ireland`
+- `booking_url` - Google Calendar Appointment Schedule URL used by all Book Now buttons.
+- `contact_phone_display` - phone number text shown to customers.
+- `contact_phone_tel` - phone link value used for `tel:`.
+- `contact_whatsapp_number` - WhatsApp number used for `https://wa.me/`.
+- `contact_email` - email address used for `mailto:`.
 
 For WhatsApp, use the international phone number without spaces or the plus symbol:
 
-```html
-https://wa.me/353832042922
+```text
+353832042922
 ```
+
+If the settings sheet cannot be loaded, the site keeps using the fallback booking and contact details in `script.js` and `index.html`.
 
 ## Change The Site Icon
 

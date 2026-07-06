@@ -1,10 +1,21 @@
-const GOOGLE_BOOKING_URL = "https://calendar.app.google/NvG3mrkW7zHY8rYk7";
 const SERVICES_CSV_URL =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vRwgUfsdrEiZh0EFepgGLQHVsfWXazqckz9cy5EJV-gG1eIqFnasCQVxL2R-GHzgGD27v3cXGx6Uw6r/pub?gid=0&single=true&output=csv";
+const SETTINGS_CSV_URL =
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vRwgUfsdrEiZh0EFepgGLQHVsfWXazqckz9cy5EJV-gG1eIqFnasCQVxL2R-GHzgGD27v3cXGx6Uw6r/pub?gid=1894676105&single=true&output=csv";
+const FALLBACK_SETTINGS = {
+  booking_url: "https://calendar.app.google/NvG3mrkW7zHY8rYk7",
+  contact_phone_display: "+353 83 204 2922",
+  contact_phone_tel: "+353832042922",
+  contact_whatsapp_number: "353832042922",
+  contact_email: "bookings@example.com",
+};
 
 const navToggle = document.querySelector(".nav-toggle");
 const siteNav = document.querySelector(".site-nav");
 const bookingLinks = document.querySelectorAll(".js-booking-link");
+const phoneLink = document.querySelector(".js-phone-link");
+const whatsappLink = document.querySelector(".js-whatsapp-link");
+const emailLink = document.querySelector(".js-email-link");
 const recommendWhatsAppLink = document.querySelector(".js-recommend-whatsapp");
 const recommendEmailLink = document.querySelector(".js-recommend-email");
 const currentYear = document.querySelector("#current-year");
@@ -117,6 +128,75 @@ function normalizeHeader(header) {
   return header.trim().replace(/^\uFEFF/, "").toLowerCase().replace(/\s+/g, "_");
 }
 
+function parseSettings(csvText) {
+  const rows = parseCsv(csvText);
+
+  if (rows.length < 2) {
+    return {};
+  }
+
+  const headers = rows[0].map(normalizeHeader);
+  const keyIndex = headers.indexOf("key");
+  const valueIndex = headers.indexOf("value");
+
+  if (keyIndex === -1 || valueIndex === -1) {
+    return {};
+  }
+
+  return rows.slice(1).reduce((settings, row) => {
+    const key = (row[keyIndex] || "").trim();
+    const value = (row[valueIndex] || "").trim();
+
+    if (key && value) {
+      settings[key] = value;
+    }
+
+    return settings;
+  }, {});
+}
+
+function applySettings(settings) {
+  bookingLinks.forEach((link) => {
+    link.href = settings.booking_url;
+    link.target = "_blank";
+    link.rel = "noopener";
+  });
+
+  if (phoneLink) {
+    phoneLink.textContent = settings.contact_phone_display;
+    phoneLink.href = `tel:${settings.contact_phone_tel}`;
+  }
+
+  if (whatsappLink) {
+    whatsappLink.href = `https://wa.me/${settings.contact_whatsapp_number}`;
+    whatsappLink.target = "_blank";
+    whatsappLink.rel = "noopener";
+  }
+
+  if (emailLink) {
+    emailLink.href = `mailto:${settings.contact_email}`;
+  }
+}
+
+async function loadSettingsFromSheet() {
+  if (SETTINGS_CSV_URL === "GOOGLE_SETTINGS_CSV_URL") {
+    return;
+  }
+
+  try {
+    const response = await fetch(SETTINGS_CSV_URL, { cache: "no-store" });
+
+    if (!response.ok) {
+      throw new Error(`Settings sheet returned ${response.status}`);
+    }
+
+    const sheetSettings = parseSettings(await response.text());
+    applySettings({ ...FALLBACK_SETTINGS, ...sheetSettings });
+  } catch (error) {
+    console.warn("Using fallback settings because the Google Sheet could not be loaded.", error);
+  }
+}
+
 function isActiveService(value) {
   if (!value) {
     return true;
@@ -201,6 +281,8 @@ async function loadServicesFromSheet() {
   }
 }
 
+applySettings(FALLBACK_SETTINGS);
+loadSettingsFromSheet();
 loadServicesFromSheet();
 
 if (navToggle && siteNav) {
@@ -218,14 +300,10 @@ if (navToggle && siteNav) {
 }
 
 bookingLinks.forEach((link) => {
-  link.href = GOOGLE_BOOKING_URL;
-  link.target = "_blank";
-  link.rel = "noopener";
-
   link.addEventListener("click", (event) => {
-    if (GOOGLE_BOOKING_URL === "GOOGLE_BOOKING_URL") {
+    if (!link.href || link.href.endsWith("GOOGLE_BOOKING_URL")) {
       event.preventDefault();
-      alert("Replace GOOGLE_BOOKING_URL in script.js with your Google Calendar Appointment Schedule link.");
+      alert("Add a booking_url value to the site settings sheet.");
     }
   });
 });
